@@ -1,4 +1,3 @@
-package com.scanner.project;
 // TokenStream.java
 
 // Implementation of the Scanner for JAY
@@ -57,9 +56,13 @@ public class TokenStream {
 			nextChar = readChar();
 			if (nextChar == '/') { // If / is followed by another /
 				// skip rest of line - it's a comment.
-				// TODO TO BE COMPLETED
+				// COMPLETED
 				// look for <cr>, <lf>, <ff>
-
+				while (!isEndOfLine(nextChar) && !isEof) {
+					nextChar = readChar();
+				}
+				skipWhiteSpace();
+				continue;
 			} else {
 				// A slash followed by anything else must be an operator.
 				t.setValue("/");
@@ -74,17 +77,53 @@ public class TokenStream {
 			t.setType("Operator");
 			t.setValue(t.getValue() + nextChar);
 			switch (nextChar) {
-			// TODO TO BE COMPLETED WHERE NEEDED
 			case '<':
 				// <=
+				nextChar = readChar();
+				if(nextChar == '='){
+					t.setValue(t.getValue() + nextChar);
+					nextChar = readChar();
+					return t;
+				} else {
+					t.setType("Other");
+				}
+				return t;
+				
 			case '>':
-				// >=
+				// >=nextChar = readChar();
+				if(nextChar == '='){
+					t.setValue(t.getValue() + nextChar);
+					nextChar = readChar();
+					return t;
+				} else {
+					t.setType("Other");
+				}
+				return t;
+				
 			case '=':
 				// ==
+				nextChar = readChar();
+				if(nextChar == '='){
+					t.setValue(t.getValue() + nextChar);
+					nextChar = readChar();
+					return t;
+				} else {
+					t.setType("Other");
+				}
+				return t;
+				
 			case '!':
 				// !=
 				nextChar = readChar();
+				if(nextChar == '='){
+					t.setValue(t.getValue() + nextChar);
+					nextChar = readChar();
+					return t;
+				} else {
+					t.setType("Other");
+				}
 				return t;
+
 			case '|':
 				// Look for ||
 				nextChar = readChar();
@@ -191,7 +230,10 @@ public class TokenStream {
 	}
 
 	private boolean isKeyword(String s) {
-		// TODO TO BE COMPLETED 
+		// COMPLETED 
+		if(s.equals("bool") || s.equals("else") ||  s.equals("if") || s.equals("integer") || s.equals("while") || s.equals("main")){
+			return true;
+		}
 		return false;
 	}
 
@@ -215,14 +257,14 @@ public class TokenStream {
 	}
 
 	private boolean isSeparator(char c) {
-		// TODO TO BE COMPLETED
-		return false;
+		// COMPLETED
+		return c == '(' || c == ')' || c == '{' || c == '}' ||  c == ';' || c == ':' || c == ',';
 	}
 
 	private boolean isOperator(char c) {
 		// Checks for characters that start operators
-		// TODO TO BE COMPLETED
-		return false;
+		// COMPLETED
+		return c == '+' || c == '-' || c == '*' || c == '/' || c == '<' || c == '>' || c == '=' || c == '!' || c == '&' || c == '|' || c == ':';
 	}
 
 	private boolean isLetter(char c) {
@@ -230,8 +272,8 @@ public class TokenStream {
 	}
 
 	private boolean isDigit(char c) {
-		// TODO TO BE COMPLETED
-		return false;
+		//COMPLETED
+		return (c >= '0' && c <= '9');
 	}
 
 	public boolean isEndofFile() {
